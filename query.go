@@ -3,7 +3,6 @@ package goSalesforce
 import (
 	"bytes"
 	"fmt"
-	"github.com/ghodss/yaml"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -11,7 +10,7 @@ import (
 
 // Do a query to salesforce
 // Need the URL and the sessionId from Sfauth
-// I will return a yaml content
+// I will return a json content
 func SfQuery(urlSf string, sessionId string, query string) []byte {
 
 	client := &http.Client{}
@@ -31,7 +30,6 @@ func SfQuery(urlSf string, sessionId string, query string) []byte {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
-	y, err := yaml.JSONToYAML(contents)
-	return y
+	return contents
 
 }
