@@ -11,7 +11,7 @@ import (
 
 // Do a query to salesforce
 // Need the URL and the sessionId from Sfauth
-// I will return a yqnl content
+// I will return a yaml content
 func SfQuery(urlSf string, sessionId string, query string) []byte {
 
 	client := &http.Client{}
