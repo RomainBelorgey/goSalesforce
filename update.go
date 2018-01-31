@@ -23,6 +23,8 @@ func SfUpdate(urlSf string, sessionId string, typeUpdate string, idUpdate string
 		os.Exit(1)
 	}
 	req.Header.Add("Authorization", "OAuth "+sessionId)
+	//Don't auto-assign case
+	req.Header.Add("Sforce-Auto-Assign", "FALSE")
 	req.Header.Add("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
