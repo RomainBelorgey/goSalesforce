@@ -33,3 +33,25 @@ func SfQuery(urlSf string, sessionId string, query string) []byte {
 	return contents
 
 }
+
+// Download the content on the path
+// Useful for downloading attachments
+// Return the file content in byte
+func SfDownload(urlSf string, sessionId string, path string) []byte {
+
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", urlSf+""+path, bytes.NewReader(nil))
+	if err != nil {
+		os.Exit(1)
+	}
+	req.Header.Add("Authorization", "OAuth "+sessionId)
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+	contents, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	return contents
+}
