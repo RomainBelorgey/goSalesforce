@@ -17,6 +17,24 @@ func SfUpdate(urlSf string, sessionId string, typeUpdate string, idUpdate string
 		"\"%s\" : \"%s\""+
 		"}", contentName, contentValue)
 
+	return sfUpdateBack(urlSf, sessionId, typeUpdate, idUpdate, content)
+}
+
+// Update a record on salesforce with a boolean as value
+// Need the URL and the sessionId from Sfauth
+// See the example to understand this function
+// Will return a bool if the change was done
+func SfUpdateBool(urlSf string, sessionId string, typeUpdate string, idUpdate string, contentName string, contentValue bool) bool {
+
+	content := fmt.Sprintf("{"+
+		"\"%s\" : %v"+
+		"}", contentName, contentValue)
+
+	return sfUpdateBack(urlSf, sessionId, typeUpdate, idUpdate, content)
+}
+
+func sfUpdateBack(urlSf string, sessionId string, typeUpdate string, idUpdate string, content string) bool {
+
 	client := &http.Client{}
 	req, err := http.NewRequest("PATCH", urlSf+"/services/data/v41.0/sobjects/"+typeUpdate+"/"+idUpdate, bytes.NewReader([]byte(content)))
 	if err != nil {
