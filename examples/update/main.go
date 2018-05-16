@@ -13,7 +13,11 @@ const (
 )
 
 func main() {
-	sessionId := goSalesforce.SfAuth(url, login, password, token)
-	//Will change the case with id your-caseid to priority normal
-	fmt.Println(goSalesforce.SfUpdate(url, sessionId, "Case", "your-caseid", "Priority", "Normal"))
+	sessionId, err := goSalesforce.SfAuth(url, login, password, token)
+	if err != nil {
+		//Will change the case with id your-caseid to priority normal
+		fmt.Println(goSalesforce.SfUpdate(url, sessionId, "Case", "your-caseid", "Priority", "Normal"))
+	} else {
+		fmt.Println(err)
+	}
 }

@@ -3,6 +3,7 @@ package goSalesforce
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -24,7 +25,7 @@ type XmlAnswer struct {
 
 // Will return a Oauth SessionID
 // The SessionId will be use for queries
-func SfAuth(url string, login string, password string, token string) string {
+func SfAuth(url string, login string, password string, token string) (string, error) {
 
 	loginXml := fmt.Sprintf("<?xml version=\"1.0\" encoding=\"utf-8\" ?>"+
 		"<env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:partner.soap.sforce.com\">"+
@@ -63,6 +64,9 @@ func SfAuth(url string, login string, password string, token string) string {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
+	if resp.StatusCode >= 300 || resp.StatusCode < 200 {
+		err = errors.New("Auth failed")
+	}
 
-	return v.XmlResponse.LoginResponse.Result.SessionId
+	return v.XmlResponse.LoginResponse.Result.SessionId, err
 }
