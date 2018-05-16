@@ -65,7 +65,7 @@ func SfAuth(url string, login string, password string, token string) (string, er
 		os.Exit(1)
 	}
 	if resp.StatusCode >= 300 || resp.StatusCode < 200 {
-		err = errors.New("Auth failed")
+		err = errors.New("Auth failed  : " + string(contents))
 	}
 
 	return v.XmlResponse.LoginResponse.Result.SessionId, err
