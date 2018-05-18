@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 )
 
 // Update a record on salesforce
@@ -13,6 +14,7 @@ import (
 // Will return a bool if the change was done
 func SfUpdate(urlSf string, sessionId string, typeUpdate string, idUpdate string, contentName string, contentValue string) bool {
 
+	contentValue = strings.Replace(contentValue, `"`, `\"`, -1)
 	content := fmt.Sprintf("{"+
 		"\"%s\" : \"%s\""+
 		"}", contentName, contentValue)
