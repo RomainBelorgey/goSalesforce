@@ -3,8 +3,8 @@ package goSalesforce
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -40,7 +40,7 @@ func sfUpdateBack(urlSf string, sessionId string, typeUpdate string, idUpdate st
 	client := &http.Client{}
 	req, err := http.NewRequest("PATCH", urlSf+"/services/data/v41.0/sobjects/"+typeUpdate+"/"+idUpdate, bytes.NewReader([]byte(content)))
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't prepare request : %s", err)
 	}
 	req.Header.Add("Authorization", "OAuth "+sessionId)
 	//Don't auto-assign case
@@ -48,7 +48,7 @@ func sfUpdateBack(urlSf string, sessionId string, typeUpdate string, idUpdate st
 	req.Header.Add("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't send request : %s", err)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {

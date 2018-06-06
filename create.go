@@ -3,8 +3,8 @@ package goSalesforce
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/http"
-	"os"
 )
 
 // Create a comment on a case on salesforce
@@ -27,7 +27,7 @@ func sfCreateBack(urlSf string, sessionId string, typeCreate string, content str
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", urlSf+"/services/data/v39.0/sobjects/"+typeCreate+"/", bytes.NewReader([]byte(content)))
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't prepare request : %s", err)
 	}
 	req.Header.Add("Authorization", "OAuth "+sessionId)
 	//Don't auto-assign case
@@ -35,7 +35,7 @@ func sfCreateBack(urlSf string, sessionId string, typeCreate string, content str
 	req.Header.Add("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't send request : %s", err)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {

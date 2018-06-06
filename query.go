@@ -2,10 +2,9 @@ package goSalesforce
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"os"
 )
 
 // Do a query to salesforce
@@ -17,7 +16,7 @@ func SfQuery(urlSf string, sessionId string, query string) []byte {
 
 	req, err := http.NewRequest("GET", urlSf+"/services/data/v41.0/query/", bytes.NewReader(nil))
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't send request : %s", err)
 	}
 	q := req.URL.Query()
 	q.Add("q", query)
@@ -27,8 +26,7 @@ func SfQuery(urlSf string, sessionId string, query string) []byte {
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
+		log.Println("Can't read response request : %s", err)
 	}
 	return contents
 
@@ -43,15 +41,14 @@ func SfDownload(urlSf string, sessionId string, path string) []byte {
 
 	req, err := http.NewRequest("GET", urlSf+""+path, bytes.NewReader(nil))
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't send request : %s", err)
 	}
 	req.Header.Add("Authorization", "OAuth "+sessionId)
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
+		log.Println("Can't read response request : %s", err)
 	}
 	return contents
 }

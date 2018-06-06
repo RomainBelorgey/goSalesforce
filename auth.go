@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"os"
 )
 
 type Envelope struct {
@@ -46,7 +46,7 @@ func SfAuth(url string, login string, password string, token string) (string, er
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url+"/services/Soap/u/41.0", bytes.NewReader([]byte(loginXml)))
 	if err != nil {
-		os.Exit(1)
+		log.Println("Can't post request Salesforce auth: %s", err)
 	}
 	req.Header.Add("SOAPAction", "login")
 	req.Header.Add("Content-Type", "text/xml; charset=UTF-8")
@@ -55,14 +55,12 @@ func SfAuth(url string, login string, password string, token string) (string, er
 
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
+		log.Println("Can't read response request : %s", err)
 	}
 	v := Envelope{}
 	err = xml.Unmarshal(contents, &v)
 	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
+		log.Println("Can't unmarshal response request : %s", err)
 	}
 	if resp.StatusCode >= 300 || resp.StatusCode < 200 {
 		err = errors.New("Auth failed  : " + string(contents))
